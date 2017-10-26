@@ -21,75 +21,28 @@
 
 package fr.inrialpes.exmo.align.service;
 
-import fr.inrialpes.exmo.align.parser.AlignmentParser;
 import fr.inrialpes.exmo.align.impl.Annotations;
-import fr.inrialpes.exmo.align.impl.Namespace;
 import fr.inrialpes.exmo.align.impl.BasicAlignment;
+import fr.inrialpes.exmo.align.impl.Namespace;
 import fr.inrialpes.exmo.align.impl.eval.DiffEvaluator;
 import fr.inrialpes.exmo.align.impl.rel.EquivRelation;
-
-import fr.inrialpes.exmo.align.service.msg.Message;
-import fr.inrialpes.exmo.align.service.msg.AlignmentId;
-import fr.inrialpes.exmo.align.service.msg.AlignmentIds;
-import fr.inrialpes.exmo.align.service.msg.AlignmentMetadata;
-import fr.inrialpes.exmo.align.service.msg.EntityList;
-import fr.inrialpes.exmo.align.service.msg.EvalResult;
-import fr.inrialpes.exmo.align.service.msg.OntologyURI;
-import fr.inrialpes.exmo.align.service.msg.RenderedAlignment;
-import fr.inrialpes.exmo.align.service.msg.TranslatedMessage;
-import fr.inrialpes.exmo.align.service.msg.ErrorMsg;
-import fr.inrialpes.exmo.align.service.msg.NonConformParameters;
-import fr.inrialpes.exmo.align.service.msg.RunTimeError;
-import fr.inrialpes.exmo.align.service.msg.UnknownAlignment;
-import fr.inrialpes.exmo.align.service.msg.UnknownMethod;
-import fr.inrialpes.exmo.align.service.msg.UnreachableAlignment;
-import fr.inrialpes.exmo.align.service.msg.UnreachableOntology;
-import fr.inrialpes.exmo.align.service.msg.CannotRenderAlignment;
-
-import fr.inrialpes.exmo.ontowrap.OntologyFactory;
+import fr.inrialpes.exmo.align.parser.AlignmentParser;
+import fr.inrialpes.exmo.align.service.msg.*;
 import fr.inrialpes.exmo.ontowrap.LoadedOntology;
-
-import org.semanticweb.owl.align.Alignment;
-import org.semanticweb.owl.align.Cell;
-import org.semanticweb.owl.align.AlignmentProcess;
-import org.semanticweb.owl.align.AlignmentVisitor;
-import org.semanticweb.owl.align.AlignmentException;
-import org.semanticweb.owl.align.Evaluator;
-
+import fr.inrialpes.exmo.ontowrap.OntologyFactory;
+import org.semanticweb.owl.align.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-
-import java.lang.ClassNotFoundException;
-import java.lang.InstantiationException;
-import java.lang.NoSuchMethodException;
-import java.lang.IllegalAccessException;
-import java.lang.NullPointerException;
-import java.lang.UnsatisfiedLinkError;
-import java.lang.ExceptionInInitializerError;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.IOException;
-import java.io.File;
 import java.net.URI;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes.Name;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.jar.Attributes;
-import java.util.jar.JarFile;
+import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 /**
@@ -939,7 +892,8 @@ public class AServProtocolManager {
 				for( StringTokenizer token = new StringTokenizer(path," \t"); token.hasMoreTokens(); )
 					classPath += File.pathSeparator+file.getParent()+File.separator+token.nextToken();
 				}
-		} catch (NullPointerException nullexp) { //Raised by JarFile
+		} catch (NullPointerException nullexp) {
+			logger.error("FATAL ERROR", nullexp);//Raised by JarFile
 			//logger.trace( "JarFile, file {} unavailable", file );
 		} catch (IOException e) {
 			logger.error("FATAL ERROR", e);;
